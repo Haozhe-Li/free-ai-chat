@@ -1,0 +1,11 @@
+{
+    "website_name": "AI - Haozhe Li",
+    "home": "AI",
+    "about": "关于",
+    "title": "问AI",
+    "subtitle": "与AI进行对话",
+    "button": "提问",
+    "empty_input": "确保您的输入不是空的，并且您已选择了模型:)",
+    "language": "zh-Hans",
+    "discalimer": "继续即表示您承认该内容由人工智能生成。不保证人工智能模型生成的内容的准确性、可靠性和完整性。"
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="{{language}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ website_name }}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}"
+    />
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='favicon/site.webmanifest') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <a href="/">
+          <img
+            src="{{ url_for('static', filename='favicon/android-chrome-512x512.png') }}"
+            alt="Logo"
+          />
+        </a>
+      </div>
+      <nav>
+        <a href="/about">{{ about }}</a>
+      </nav>
+    </header>
+    <main>
+      <h1>{{ title }}</h1>
+      <p class="subheading">{{ subtitle }}</p>
+      <form action="/generate" , method="post">
+        <textarea placeholder="" name="input_text" id="input_text"></textarea>
+        <button type="submit">{{ button }}</button>
+        <div class="model-selection">
+          <label
+            ><input type="radio" name="model" value="llama3-8b-8192" />LLaMa
+            3</label
+          >
+          <label
+            ><input
+              type="radio"
+              name="model"
+              value="mixtral-8x7b-32768"
+            />Mixtral</label
+          >
+          <label
+            ><input type="radio" name="model" value="gemma2-9b-it" />Gemma
+            2</label
+          >
+        </div>
+      </form>
+
+      <div class="response" style="display: none" id="response"></div>
+    </main>
+    <footer>
+      <p>
+        © 2024 <a href="https://haozhe.li">Haozhe Li</a>. All rights reserved.
+      </p>
+    </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector("form").onsubmit = function (e) {
+          e.preventDefault();
+          var inputText = document.getElementById("input_text").value;
+          if (
+            !inputText ||
+            !document.querySelector('input[name="model"]:checked')
+          ) {
+            var responseElement = document.querySelector(".response");
+            responseElement.textContent = "{{ empty_input}}";
+            responseElement.style.display = "block";
+            return;
+          }
+          var model = document.querySelector(
+            'input[name="model"]:checked'
+          ).value;
+          response.style.display = "none";
+          fetch("/generate", {
+            method: "POST",
+            body: new URLSearchParams({ input_text: inputText, model: model }),
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              var responseElement = document.querySelector(".response");
+              if (data.error) {
+                responseElement.textContent =
+                  "It seems that something went wrong!";
+              } else {
+                responseElement.textContent = data.response;
+              }
+              responseElement.style.display = "block";
+            })
+            .catch((error) => console.error("Error:", error));
+        };
+      });
+    </script>
+    <script>
+      var responseElement = document.querySelector(".response");
+            responseElement.textContent = "{{ discalimer }}";
+            responseElement.style.display = "block";
+    </script>
+  </body>
+</html>
