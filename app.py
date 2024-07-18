@@ -1,6 +1,5 @@
 from flask import Flask, Response, render_template, request, jsonify, redirect
 from core.generateResponse import *
-import time
 import json
 
 app = Flask(__name__)
