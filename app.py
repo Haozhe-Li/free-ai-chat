@@ -9,7 +9,8 @@ def index():
     if request.referrer is None:
         user_language = request.accept_languages.best_match(['en', 'zh'])
     else:
-        user_language = 'zh' if 'zh' in request.referrer else 'en'
+        user_language = 'zh' if '/zh' in request.referrer else 'en'
+        print(request.referrer)
     if user_language == 'zh':
         return redirect('/zh')
     else:
@@ -26,7 +27,7 @@ def about():
     if request.referrer is None:
         user_language = request.accept_languages.best_match(['en', 'zh'])
     else:
-        user_language = 'zh' if 'zh' in request.referrer else 'en'
+        user_language = 'zh' if '/zh' in request.referrer else 'en'
     if user_language == 'zh':
         return redirect('/zh/about')
     else:
