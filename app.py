@@ -9,7 +9,7 @@ app = Flask(__name__)
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["10 per minute", "60 per hour"]
+    default_limits=["10 per minute", "300 per hour"]
 )
 
 
@@ -53,20 +53,13 @@ def about_zh():
 
 
 @app.route("/generate", methods=["POST"])
-@limiter.limit("10 per minute")
+@limiter.limit("30 per minute")
 def generate():
     if not request.referrer.startswith(request.host_url):
         return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
     input_text = request.form.get("input_text")
     model = request.form.get("model")
-    try:
-        response = generate_response(input_text, model) 
-    except Exception as e:
-        return jsonify(
-            {
-                "response": "Error Occured in Backend, Error Code: 500",
-            }
-        )
+    response = generate_response(input_text, model) 
     return jsonify({"response": response})
 
 @app.errorhandler(RateLimitExceeded)

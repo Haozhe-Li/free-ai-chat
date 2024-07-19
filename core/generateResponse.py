@@ -64,9 +64,12 @@ def generate_response(input_text: str, model: str):
         "model": model,
         "response_format": {"type": "json_object"},
     }
-    response = requests.post(url, headers=headers, json=payload)
-    data = json.loads(response.json()["choices"][0]["message"]["content"])  
-    return data["answer"]
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        data = json.loads(response.json()["choices"][0]["message"]["content"])  
+        return data["answer"]
+    except Exception as e:
+        return str(e)
 
 
 def generate_response_openai(input_text: str, model: str):
@@ -83,5 +86,8 @@ def generate_response_openai(input_text: str, model: str):
         ],
         "model": model,
     }
-    response = requests.post(url, headers=headers, json=payload)
-    return response.json()["choices"][0]["message"]["content"]
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        return response.json()["choices"][0]["message"]["content"]
+    except Exception as e:
+        return str(e)
