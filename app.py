@@ -7,9 +7,7 @@ import json
 
 app = Flask(__name__)
 limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["10 per minute", "300 per hour"]
+    get_remote_address, app=app, default_limits=["10 per minute", "300 per hour"]
 )
 
 
@@ -52,6 +50,23 @@ def about_zh():
     return render_template("about.html", **content)
 
 
+@app.route("/privacy")
+def privacy():
+    if request.referrer is None:
+        user_language = request.accept_languages.best_match(["en", "zh"])
+    else:
+        user_language = "zh" if "/zh" in request.referrer else "en"
+    if user_language == "zh":
+        return redirect("/zh/privacy")
+    else:
+        return render_template("privacy.html")
+
+
+@app.route("/zh/privacy")
+def privacy_zh():
+    return render_template("privacy_zh.html")
+
+
 @app.route("/generate", methods=["POST"])
 @limiter.limit("30 per minute")
 def generate():
@@ -59,8 +74,9 @@ def generate():
         return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
     input_text = request.form.get("input_text")
     model = request.form.get("model")
-    response = generate_response(input_text, model) 
+    response = generate_response(input_text, model)
     return jsonify({"response": response})
+
 
 @app.errorhandler(RateLimitExceeded)
 def ratelimit_handler(e):
@@ -68,4 +84,4 @@ def ratelimit_handler(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

@@ -73,11 +73,11 @@
         </div>
       </form>
 
-      <div class="response" style="display: block" id="response">{{ discalimer }}</div>
+      <div class="response" style="display: block" id="response">{{ discalimer | safe }}</div>
     </main>
     <footer>
       <p>
-        © 2024 <b><a href="https://haozhe.li">Haozhe Li</a></b>. All rights reserved.
+        {{ footer | safe}}
       </p>
     </footer>
     <script>
