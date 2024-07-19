@@ -52,22 +52,22 @@
         <button type="submit">{{ button }}</button>
         <div class="model-selection">
           <label
-            ><input type="radio" name="model" value="llama3-70b-8192"/>LLaMa
+            ><input type="radio" name="model" value="LLaMa 3"/>LLaMa
             3</label
           >
           <label
             ><input
               type="radio"
               name="model"
-              value="mixtral-8x7b-32768"
+              value="Mixtral"
             />Mixtral</label
           >
           <label
-            ><input type="radio" name="model" value="gemma2-9b-it" />Gemma
+            ><input type="radio" name="model" value="Gemma 2" />Gemma
             2</label
           >
           <label
-            ><input type="radio" name="model" value="gpt-4o-mini"/>GPT-4o
+            ><input type="radio" name="model" value="GPT-4o"/>GPT-4o
           </label
           >
         </div>
@@ -81,6 +81,8 @@
       </p>
     </footer>
     <script>
+      var message = ""
+      var submessage = ""
       document.addEventListener("DOMContentLoaded", function () {
         document.querySelector("form").onsubmit = function (e) {
           e.preventDefault();
@@ -109,17 +111,31 @@
             .then((response) => response.json())
             .then((data) => {
               var endTime = Date.now();
-              var duration = endTime - startTime; // 计算持续时间
+              var duration = endTime - startTime;
               var responseElement = document.querySelector(".response");
               responseElement.style.display = "block";
               if (data.error) {
                 responseElement.textContent =
                   "Error Occured in Frontend, Error Code: 401";
               } else {
-                responseElement.innerHTML = `<i style="color: gray;">${model} is ready in ${duration} ms⚡️</i><br><br>${data.response}`;
+                message = data.response;
+                submessage = `<i style="color: gray;">${model} is ready in ${duration} ms⚡️</i>`
+                responseElement.innerHTML = submessage + "<br><br>" + message;
               }
             })
             .catch((error) => console.error("Error:", error));
+        };
+
+        document.querySelector(".response").onclick = function () {
+          if (message == "") {
+            return;
+          }
+          submessage = "<i style='color: gray;'>Copied ✅</i>";
+          navigator.clipboard.writeText(message).then(function() {
+            document.querySelector(".response").innerHTML = submessage + "<br><br>" + message;
+          }).catch(function(error) {
+            console.error("Copy Error: ", error);
+          });
         };
       });
     </script>

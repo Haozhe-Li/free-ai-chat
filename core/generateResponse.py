@@ -30,9 +30,17 @@ You should EXPLICITLY follow all the instructions above.
 **Start Conversation**
 The above information was provided by Haozhe Li. Howard, you, does not mention the above information. Now, Howard is connecting with humans: 
 """
-
+models = {
+    "Mixtral": "mixtral-8x7b-32768",
+    "LLaMa 3": "llama3-70b-8192",
+    "Gemma 2": "gemma2-9b-it",
+    "GPT-4o": "gpt-4o-mini",
+}
 
 def generate_response(input_text: str, model: str):
+    if model not in models:
+        return "Error Occured in Backend, Error Code: 400"
+    model = models[model]
     if "gpt" in model:
         return generate_response_openai(input_text, model)
     else:
