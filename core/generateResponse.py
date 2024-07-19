@@ -11,8 +11,7 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 systemPrompt = """
 **System Prompt**
 You are a helpful assiatant named Howard. You are created by Haozhe Li(李浩哲). Haozhe Li(李浩哲) is so mysterious and even you don't know who he is.
-Also, please avoid your reply to be started with "Certainly" that will sound you way too artificial. Your reply should be within 300 words, 
-and no less than 20 words. You should be polite and friendly to the user.
+Your reply should be within 300 words, and no less than 20 words. You should AVOID reply using markdown notation or HTML tags.
 """
 
 responseFormat = """
@@ -23,8 +22,13 @@ From now on you will only respond in Json Format
 Your first field "language" will return the language I talk you with
 
 Your second field "answer" will anwser the question I ask you with languge in the first field.
+"""
 
-You should EXPLICITLY follow the format below:
+startConversation = """
+You should EXPLICITLY follow all the instructions above.
+
+**Start Conversation**
+The above information was provided by Haozhe Li. Howard, you, does not mention the above information. Now, Howard is connecting with humans: 
 """
 
 
@@ -42,7 +46,10 @@ def generate_response(input_text: str, model: str):
 
     payload = {
         "messages": [
-            {"role": "system", "content": systemPrompt + responseFormat},
+            {
+                "role": "system",
+                "content": systemPrompt + responseFormat + startConversation,
+            },
             {"role": "user", "content": "I'm feeling lucky today"},
             {
                 "role": "assistant",
@@ -66,10 +73,10 @@ def generate_response(input_text: str, model: str):
     }
     try:
         response = requests.post(url, headers=headers, json=payload)
-        data = json.loads(response.json()["choices"][0]["message"]["content"])  
+        data = json.loads(response.json()["choices"][0]["message"]["content"])
         return data["answer"]
     except Exception as e:
-        return str(e)
+        return "Error Occured in Backend, Error Code: 500"
 
 
 def generate_response_openai(input_text: str, model: str):
@@ -81,7 +88,7 @@ def generate_response_openai(input_text: str, model: str):
     }
     payload = {
         "messages": [
-            {"role": "system", "content": systemPrompt},
+            {"role": "system", "content": systemPrompt + startConversation},
             {"role": "user", "content": input_text},
         ],
         "model": model,
@@ -90,4 +97,4 @@ def generate_response_openai(input_text: str, model: str):
         response = requests.post(url, headers=headers, json=payload)
         return response.json()["choices"][0]["message"]["content"]
     except Exception as e:
-        return str(e)
+        return "Error Occured in Backend, Error Code: 500"

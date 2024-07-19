@@ -84,6 +84,7 @@
       document.addEventListener("DOMContentLoaded", function () {
         document.querySelector("form").onsubmit = function (e) {
           e.preventDefault();
+          var startTime = Date.now();
           response.style.display = "none";
           var inputText = document.getElementById("input_text").value;
           if (
@@ -107,13 +108,15 @@
           })
             .then((response) => response.json())
             .then((data) => {
+              var endTime = Date.now();
+              var duration = endTime - startTime; // 计算持续时间
               var responseElement = document.querySelector(".response");
               responseElement.style.display = "block";
               if (data.error) {
                 responseElement.textContent =
                   "Error Occured in Frontend, Error Code: 401";
               } else {
-                responseElement.textContent = data.response;
+                responseElement.innerHTML = `<i style="color: gray;">${model} is ready in ${duration} ms⚡️</i><br><br>${data.response}`;
               }
             })
             .catch((error) => console.error("Error:", error));
