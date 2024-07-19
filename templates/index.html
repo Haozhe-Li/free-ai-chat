@@ -52,7 +52,7 @@
         <button type="submit">{{ button }}</button>
         <div class="model-selection">
           <label
-            ><input type="radio" name="model" value="llama3-70b-8192" />LLaMa
+            ><input type="radio" name="model" value="llama3-70b-8192"/>LLaMa
             3</label
           >
           <label
@@ -67,17 +67,17 @@
             2</label
           >
           <label
-            ><input type="radio" name="model" value="gpt-4o-mini"/>GPT
+            ><input type="radio" name="model" value="gpt-4o-mini"/>GPT-4o
           </label
           >
         </div>
       </form>
 
-      <div class="response" style="display: none" id="response"></div>
+      <div class="response" style="display: block" id="response">{{ discalimer }}</div>
     </main>
     <footer>
       <p>
-        © 2024 <a href="https://haozhe.li">Haozhe Li</a>. All rights reserved.
+        © 2024 <b><a href="https://haozhe.li">Haozhe Li</a></b>. All rights reserved.
       </p>
     </footer>
     <script>
@@ -119,11 +119,6 @@
             .catch((error) => console.error("Error:", error));
         };
       });
-    </script>
-    <script>
-      var responseElement = document.querySelector(".response");
-            responseElement.textContent = "{{ discalimer }}";
-            responseElement.style.display = "block";
     </script>
   </body>
 </html>
