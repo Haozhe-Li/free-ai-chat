@@ -1,55 +1,78 @@
 from flask import Flask, Response, render_template, request, jsonify, redirect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_limiter.errors import RateLimitExceeded
 from core.generateResponse import *
 import json
 
 app = Flask(__name__)
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["10 per minute", "60 per hour"]
+)
 
-@app.route('/')
+
+@app.route("/")
 def index():
     if request.referrer is None:
-        user_language = request.accept_languages.best_match(['en', 'zh'])
+        user_language = request.accept_languages.best_match(["en", "zh"])
     else:
-        user_language = 'zh' if '/zh' in request.referrer else 'en'
+        user_language = "zh" if "/zh" in request.referrer else "en"
         print(request.referrer)
-    if user_language == 'zh':
-        return redirect('/zh')
+    if user_language == "zh":
+        return redirect("/zh")
     else:
-        content = json.load(open('./i18n/en.json'))
-    return render_template('index.html', **content)
+        content = json.load(open("./i18n/en.json"))
+    return render_template("index.html", **content)
 
-@app.route('/zh')
+
+@app.route("/zh")
 def index_zh():
-    content = json.load(open('./i18n/zh.json'))
-    return render_template('index.html', **content)
+    content = json.load(open("./i18n/zh.json"))
+    return render_template("index.html", **content)
 
-@app.route('/about')
+
+@app.route("/about")
 def about():
     if request.referrer is None:
-        user_language = request.accept_languages.best_match(['en', 'zh'])
+        user_language = request.accept_languages.best_match(["en", "zh"])
     else:
-        user_language = 'zh' if '/zh' in request.referrer else 'en'
-    if user_language == 'zh':
-        return redirect('/zh/about')
+        user_language = "zh" if "/zh" in request.referrer else "en"
+    if user_language == "zh":
+        return redirect("/zh/about")
     else:
-        content = json.load(open('./i18n/about_en.json'))
-    return render_template('about.html', **content)
+        content = json.load(open("./i18n/about_en.json"))
+    return render_template("about.html", **content)
 
-@app.route('/zh/about')
+
+@app.route("/zh/about")
 def about_zh():
-    content = json.load(open('./i18n/about_zh.json'))
-    return render_template('about.html', **content)
+    content = json.load(open("./i18n/about_zh.json"))
+    return render_template("about.html", **content)
 
-@app.route('/generate', methods=['POST'])
+
+@app.route("/generate", methods=["POST"])
+@limiter.limit("10 per minute")
 def generate():
-    input_text = request.form.get('input_text')
-    model= request.form.get('model')
+    if not request.referrer.startswith(request.host_url):
+        return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
+    input_text = request.form.get("input_text")
+    model = request.form.get("model")
     try:
-        response = generate_response(input_text, model)["choices"][0]["message"]["content"]
-        data = json.loads(response)
-        response = data['answer']
+        response = generate_response(input_text, model) 
     except Exception as e:
-        return jsonify({"error": "An error occurred while generating the response. Please try again"})
+        return jsonify(
+            {
+                "response": "Error Occured in Backend, Error Code: 500",
+            }
+        )
     return jsonify({"response": response})
 
-if __name__ == '__main__':
+@app.errorhandler(RateLimitExceeded)
+def ratelimit_handler(e):
+    return jsonify({"response": "Error Occured in Backend, Error Code: 429"})
+
+
+if __name__ == "__main__":
     app.run(debug=True)

@@ -4,5 +4,5 @@
     "title": "问AI",
     "subtitle": "与AI进行对话",
     "language": "zh-Hans",
-    "detail": "你们好亲爱的朋友，欢迎来到我的网站！很高兴您能来到这里。我想告诉你，你可以完全免费地与最新的 LLM 模型聊天。我很高兴地告诉您，我们目前有四种模型可以与您聊天：分别是 Meta AI 的 LLaMa 3、Google 的 Gemma 2、Mistral 的 Mixtral 和 OpenAI 的 GPT-3.5-Turbo。需要提醒的是：每个查询或问题都是完全独立的，因此LLM不会记住你之前的问题。如果您有任何问题或建议，请随时联系我。我将竭诚为您服务！ 😊"
+    "detail": "Hi！非常高兴能在这里与你见面！在这里你可以体验到最新的开源、以及商业化的AI技术。<br>为了保护您的隐私，本网站<b>不会</b>存储任何您的个人信息、聊天资料等。因此所有的请求均不支持上下文联想，每次请求都会是独立的。换言之：AI并<b>不会</b>记住你之前说的话！还希望理解～<br><br>目前支持的模型有：<br><b>llama3-70b-8192: </b> Meta AI 最强大的开源的最新模型<br><b>mixtral-8x7b-32768: </b> 由Mistral开源的模型<br><b>gemma2-9b-it: </b>Google 开源的模型<br><b>gpt-4o-mini: </b>OpenAI闭源、最新的商业化模型<br><br>如果你在使用中出现任何问题，欢迎<b><a href=\"https://haozhe.li#contact\">联系我</a></b>，并请将错误截图一并给我，谢谢🙏。<br><br><i><a href=\"https://haozhe.li\">来自作者：李浩哲</a></i>"
 }

@@ -48,7 +48,7 @@
       <h1>{{ title }}</h1>
       <p class="subheading">{{ subtitle }}</p>
 
-      <div class="response" style="display: none" id="response"></div>
+      <div class="response" style="display: none" id="response">{{ detail | safe }}</div>
     </main>
     <footer>
       <p>
@@ -57,8 +57,6 @@
     </footer>
     <script>
       var responseElement = document.querySelector(".response");
-            responseElement.textContent = "{{ detail }}";
-            responseElement.textContent = responseElement.textContent.replace(/&#39;/g, "\'");
             responseElement.style.display = "block";
     </script>
   </body>

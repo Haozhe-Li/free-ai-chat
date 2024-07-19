@@ -48,11 +48,11 @@
       <h1>{{ title }}</h1>
       <p class="subheading">{{ subtitle }}</p>
       <form action="/generate" , method="post">
-        <textarea placeholder="" name="input_text" id="input_text"></textarea>
+        <textarea placeholder="{{ placeholder }}" name="input_text" id="input_text"></textarea>
         <button type="submit">{{ button }}</button>
         <div class="model-selection">
           <label
-            ><input type="radio" name="model" value="llama3-8b-8192" />LLaMa
+            ><input type="radio" name="model" value="llama3-70b-8192" />LLaMa
             3</label
           >
           <label
@@ -65,6 +65,10 @@
           <label
             ><input type="radio" name="model" value="gemma2-9b-it" />Gemma
             2</label
+          >
+          <label
+            ><input type="radio" name="model" value="gpt-4o-mini"/>GPT
+          </label
           >
         </div>
       </form>
@@ -80,6 +84,7 @@
       document.addEventListener("DOMContentLoaded", function () {
         document.querySelector("form").onsubmit = function (e) {
           e.preventDefault();
+          response.style.display = "none";
           var inputText = document.getElementById("input_text").value;
           if (
             !inputText ||
@@ -93,7 +98,6 @@
           var model = document.querySelector(
             'input[name="model"]:checked'
           ).value;
-          response.style.display = "none";
           fetch("/generate", {
             method: "POST",
             body: new URLSearchParams({ input_text: inputText, model: model }),
@@ -104,13 +108,13 @@
             .then((response) => response.json())
             .then((data) => {
               var responseElement = document.querySelector(".response");
+              responseElement.style.display = "block";
               if (data.error) {
                 responseElement.textContent =
-                  "It seems that something went wrong!";
+                  "Error Occured in Frontend, Error Code: 401";
               } else {
                 responseElement.textContent = data.response;
               }
-              responseElement.style.display = "block";
             })
             .catch((error) => console.error("Error:", error));
         };
