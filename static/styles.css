@@ -119,11 +119,6 @@ button:hover {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-.response:active {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: #ccc;
-}
-
 footer {
     text-align: center;
     padding: 10px;

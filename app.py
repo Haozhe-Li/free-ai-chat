@@ -69,12 +69,12 @@ def privacy_zh():
 
 @app.route("/generate", methods=["POST"])
 @limiter.limit("30 per minute")
-def generate():
+async def generate():
     if not request.referrer.startswith(request.host_url):
         return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
     input_text = request.form.get("input_text")
     model = request.form.get("model")
-    response = generate_response(input_text, model)
+    response = await generate_response(input_text, model)
     return jsonify({"response": response})
 
 

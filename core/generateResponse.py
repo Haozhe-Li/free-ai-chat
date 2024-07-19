@@ -1,6 +1,6 @@
-import requests
 import os
 import json
+import httpx
 
 groq_url = "https://api.groq.com/openai/v1/chat/completions"
 openai_url = "https://api.openai.com/v1/chat/completions"
@@ -32,17 +32,24 @@ The above information was provided by Haozhe Li. Howard, you, does not mention t
 """
 models = {
     "Mixtral": "mixtral-8x7b-32768",
-    "LLaMa 3": "llama3-70b-8192",
+    "LLaMa 3": "llama3-8b-8192",
     "Gemma 2": "gemma2-9b-it",
     "GPT-4o": "gpt-4o-mini",
 }
 
-def generate_response(input_text: str, model: str):
+
+async def fetch(url, headers, payload):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, headers=headers, json=payload, timeout=10)
+    return response
+
+
+async def generate_response(input_text: str, model: str):
     if model not in models:
         return "Error Occured in Backend, Error Code: 400"
     model = models[model]
     if "gpt" in model:
-        return generate_response_openai(input_text, model)
+        return await generate_response_openai(input_text, model)
     else:
         url = groq_url
         api_key = groq_api_key
@@ -80,14 +87,14 @@ def generate_response(input_text: str, model: str):
         "response_format": {"type": "json_object"},
     }
     try:
-        response = requests.post(url, headers=headers, json=payload)
+        response = await fetch(url, headers, payload)
         data = json.loads(response.json()["choices"][0]["message"]["content"])
         return data["answer"]
     except Exception as e:
         return "Error Occured in Backend, Error Code: 500"
 
 
-def generate_response_openai(input_text: str, model: str):
+async def generate_response_openai(input_text: str, model: str):
     url = openai_url
     api_key = openai_api_key
     headers = {
@@ -102,7 +109,7 @@ def generate_response_openai(input_text: str, model: str):
         "model": model,
     }
     try:
-        response = requests.post(url, headers=headers, json=payload)
+        response = await fetch(url, headers, payload)
         return response.json()["choices"][0]["message"]["content"]
     except Exception as e:
         return "Error Occured in Backend, Error Code: 500"
