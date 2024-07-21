@@ -119,6 +119,24 @@ button:hover {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
+.aboutContent {
+    margin-top: 20px;
+    max-width: 720px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    text-align: left;
+}
+
+.aboutContent:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
 footer {
     text-align: center;
     padding: 10px;

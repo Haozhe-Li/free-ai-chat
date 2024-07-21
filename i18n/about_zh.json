@@ -5,5 +5,5 @@
     "subtitle": "与AI进行对话",
     "language": "zh-Hans",
     "footer": "© 2024 <b><a href=\"https://haozhe.li\">李浩哲</a></b>. 保留所有权利。",
-    "detail": "Hi！非常高兴能在这里与你见面！在这里你可以体验到最新的开源、以及商业化的AI技术。<br>为了保护您的隐私，本网站<b>不会</b>存储任何您的个人信息、聊天资料等。因此所有的请求均不支持上下文联想，每次请求都会是独立的。换言之：AI并<b>不会</b>记住你之前说的话！还希望理解～<br><b><a href=\"privacy\">了解有关隐私条款的更多信息</a></b><br><br>目前支持的模型有：<br><b>LLaMa 3: </b> Meta AI 最强大的开源的最新模型<br><b>Mixtral: </b> 由Mistral开源的模型<br><b>Gemma 2: </b>Google 开源的模型<br><b>GPT-4o: </b>OpenAI闭源、最新的商业化模型<br><br>如果你在使用中出现任何问题，欢迎<b><a href=\"https://haozhe.li#contact\">联系我</a></b>，并请将错误截图一并给我，谢谢🙏。<br><br><i><a href=\"https://haozhe.li\">来自作者：李浩哲</a></i>"
+    "detail": "<h2>关于</h2><br>您好！很高兴在这里与您见面！在这里，您可以体验到最新的开源和商业人工智能技术。<br><br><h2>您的隐私重要</h2><br>为了保护您的隐私，本网站<b>不会</b>存储您的任何个人信息或聊天记录。因此，所有请求都不支持上下文关联，并且每个请求都是独立的。换句话说人工智能<b>不会</b>记住您之前说过的话！希望您能理解～ <br><b><a href='privacy'>隐私政策</a></b><br><br><h2>可用模型</h2><br>目前支持的模型如下：<br><b>LLaMa 3: </b> Meta AI 最强大、最新的开源模型<br><b>Mixtral：</b>Mistral开源模型<br><b>Gemma 2：</b>Google开源模型<br><b>GPT-4o：</b> OpenAI 的最新商业模型，未开源<br><br><h2>问题</h2><br>如果您在使用过程中遇到任何问题，请随时 <b><a href='https://haozhe.li#contact'> 联系我</a></b>，并请附上错误截图。谢谢！🙏<br><br><i><a href='https://haozhe.li'>From the author：Haozhe Li</a></i>"
 }

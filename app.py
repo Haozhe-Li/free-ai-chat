@@ -13,11 +13,7 @@ limiter = Limiter(
 
 @app.route("/")
 def index():
-    if request.referrer is None:
-        user_language = request.accept_languages.best_match(["en", "zh"])
-    else:
-        user_language = "zh" if "/zh" in request.referrer else "en"
-        print(request.referrer)
+    user_language = request.accept_languages.best_match(["en", "zh"])
     if user_language == "zh":
         return redirect("/zh")
     else:
@@ -33,10 +29,7 @@ def index_zh():
 
 @app.route("/about")
 def about():
-    if request.referrer is None:
-        user_language = request.accept_languages.best_match(["en", "zh"])
-    else:
-        user_language = "zh" if "/zh" in request.referrer else "en"
+    user_language = request.accept_languages.best_match(["en", "zh"])
     if user_language == "zh":
         return redirect("/zh/about")
     else:
@@ -52,10 +45,7 @@ def about_zh():
 
 @app.route("/privacy")
 def privacy():
-    if request.referrer is None:
-        user_language = request.accept_languages.best_match(["en", "zh"])
-    else:
-        user_language = "zh" if "/zh" in request.referrer else "en"
+    user_language = request.accept_languages.best_match(["en", "zh"])
     if user_language == "zh":
         return redirect("/zh/privacy")
     else:

@@ -48,7 +48,7 @@
       <h1>{{ title }}</h1>
       <p class="subheading">{{ subtitle }}</p>
 
-      <div class="response" style="display: none" id="response">{{ detail | safe }}</div>
+      <div class="aboutContent" style="display: none" id="aboutContent">{{ detail | safe }}</div>
     </main>
     <footer>
       <p>
@@ -56,7 +56,7 @@
       </p>
     </footer>
     <script>
-      var responseElement = document.querySelector(".response");
+      var responseElement = document.querySelector(".aboutContent");
             responseElement.style.display = "block";
     </script>
   </body>
