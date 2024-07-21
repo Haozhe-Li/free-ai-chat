@@ -15,6 +15,12 @@ document.addEventListener("DOMContentLoaded", function () {
       responseElement.style.display = "block";
       return;
     }
+    if (inputText.length > 512) {
+      var responseElement = document.querySelector(".response");
+      responseElement.textContent = "Input text is too long, please keep it under 512 characters";
+      responseElement.style.display = "block";
+      return;
+    }
     var model = document.querySelector(
       'input[name="model"]:checked'
     ).value;

@@ -43,13 +43,24 @@ models = {
 }
 
 
-async def fetch(url, headers, payload):
+async def fetch(url: str, headers: dict, payload: dict):
+    """
+    Fetch data from the given url with headers and payload
+    Input: url, headers, payload
+    Output: response
+    """
     async with httpx.AsyncClient() as client:
         response = await client.post(url, headers=headers, json=payload, timeout=10)
     return response
 
 
-async def generate_response(input_text: str, model: str):
+async def generate_response(input_text: str, model: str) -> str:
+    """
+    Generate response based on the input_text and model. 
+    If model is GPT, use OpenAI API, otherwise use Groq API
+    Input: input_text, model
+    Output: response
+    """
     if not is_valid(input_text, model):
         return "Error Occured in Backend, Error Code: 400"
     model = models[model]
@@ -99,7 +110,12 @@ async def generate_response(input_text: str, model: str):
         return "Error Occured in Backend, Error Code: 500"
 
 
-async def generate_response_openai(input_text: str, model: str):
+async def generate_response_openai(input_text: str, model: str) -> str:
+    """
+    Generate response based on the input_text and model using OpenAI API
+    Input: input_text, model
+    Output: response
+    """
     url = openai_url
     api_key = openai_api_key
     headers = {
@@ -119,12 +135,15 @@ async def generate_response_openai(input_text: str, model: str):
     except Exception as e:
         return "Error Occured in Backend, Error Code: 500"
     
-def is_valid(input_text: str, model: str):
+def is_valid(input_text: str, model: str) -> bool:
+    """
+    Check if the input_text and model are valid
+    Input: input_text, model
+    Output: True if valid, False otherwise
+    """
     if not input_text or not model:
         return False
     if model not in models:
-        return False
-    if len(input_text) > 512:
         return False
     return True
 
