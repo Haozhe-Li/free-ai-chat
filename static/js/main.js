@@ -1,32 +1,54 @@
 var message = ""
 var submessage = ""
+var pageLanguage = document.querySelector("html").lang;
+
+var warningMessages = {
+  "noinput": {
+    "en": "Please enter some text",
+    "zh-CN": "请输入一些文本",
+    "ja": "テキストを入力してください"
+  },
+  "longinput": {
+    "en": "Input text is too long, please keep it under 512 characters",
+    "zh-CN": "输入文本太长，请保持在512个字符以下",
+    "ja": "入力テキストが長すぎます。512文字以下にしてください"
+  },
+  "nomodel": {
+    "en": "Please select a model",
+    "zh-CN": "请选择一个模型",
+    "ja": "モデルを選択してください"
+  }
+};
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelector("form").onsubmit = function (e) {
     e.preventDefault();
     var startTime = Date.now();
     response.style.display = "none";
+    var responseElement = document.querySelector(".response");
     var inputText = document.getElementById("input_text").value;
     if (
-      !inputText ||
-      !document.querySelector('input[name="model"]:checked')
+      !inputText
     ) {
-      var responseElement = document.querySelector(".response");
-      responseElement.textContent = "Please fill in the input text and select a model";
+      responseElement.textContent = warningMessages["noinput"][pageLanguage];
       responseElement.style.display = "block";
       return;
     }
     if (inputText.length > 512) {
-      var responseElement = document.querySelector(".response");
-      responseElement.textContent = "Input text is too long, please keep it under 512 characters";
+      responseElement.textContent = warningMessages["longinput"][pageLanguage];
       responseElement.style.display = "block";
       return;
     }
+    if (!document.querySelector('input[name="model"]:checked')) {
+      responseElement.textContent = warningMessages["nomodel"][pageLanguage];
+      responseElement.style.display = "block";
+      return;
+    }
+
     var model = document.querySelector(
       'input[name="model"]:checked'
     ).value;
 
     var generatingTimeout = setTimeout(function () {
-      var responseElement = document.querySelector(".response");
       responseElement.textContent = "Still generating...";
       responseElement.style.display = "block";
     }, 2000);

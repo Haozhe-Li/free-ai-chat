@@ -17,14 +17,17 @@ languages_content = {
     "en": {
         "index": json.load(open("./i18n/en.json")),
         "about": json.load(open("./i18n/about_en.json")),
+        "404": json.load(open("./i18n/404_en.json")),
     },
     "zh": {
         "index": json.load(open("./i18n/zh.json")),
         "about": json.load(open("./i18n/about_zh.json")),
+        "404": json.load(open("./i18n/404_zh.json")),
     },
     "ja": {
         "index": json.load(open("./i18n/ja.json")),
         "about": json.load(open("./i18n/about_ja.json")),
+        "404": json.load(open("./i18n/404_ja.json")),
     },
 }
 
@@ -73,6 +76,10 @@ def privacy(lang="en"):
     template_name = "privacy_zh.html" if lang == "zh" else "privacy.html"
     return render_template(template_name)
 
+@app.route('/favicon.ico')
+def favicon():
+    return app.send_static_file('favicon.ico')
+
 
 @app.route("/generate", methods=["POST"])
 @limiter.limit("30 per minute")
@@ -88,6 +95,12 @@ async def generate():
 @app.errorhandler(RateLimitExceeded)
 def ratelimit_handler(e):
     return jsonify({"response": "Error Occured in Backend, Error Code: 429"})
+
+@app.errorhandler(404)
+def page_not_found(e):
+    content = get_content("404", "en")
+    content['details'] = content['details'].replace("$$path$$", f"<b>{request.url}</b>")
+    return render_template("404.html", **content), 404
 
 
 if __name__ == "__main__":

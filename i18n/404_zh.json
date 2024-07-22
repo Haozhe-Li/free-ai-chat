@@ -1,0 +1,9 @@
+{
+    "website_name": "AI - Haozhe Li",
+    "home": "返回首页",
+    "title": "404 Not Found",
+    "subtitle": "您访问的页面不存在",
+    "language": "zh-CN",
+    "details": "您正在访问$$path$$，但是该页面不存在。请检查您的链接是否正确。若您认为这是一个错误，请<b><a href='https://haozhe.li'>联系我们</a></b>。",
+    "footer": "© 2024 <b><a href=\"https://haozhe.li\">李浩哲</a></b>. 保留所有权利。"
+}

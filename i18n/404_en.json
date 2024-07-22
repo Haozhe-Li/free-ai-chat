@@ -1,0 +1,9 @@
+{
+    "website_name": "AI - Haozhe Li",
+    "home": "BACK TO HOME",
+    "title": "404 Not Found",
+    "subtitle": "The page you are visiting does not exist",
+    "language": "zh-CN",
+    "details": "You are visiting $$path$$, but the page does not exist. Please check that your link is correct. If you think this is an error, please <b><a href='https://haozhe.li'>contact us</a></b>.",
+    "footer": "© 2024 <b><a href=\"https://haozhe.li\">Haozhe Li</a></b>. All rights reserved."
+}
