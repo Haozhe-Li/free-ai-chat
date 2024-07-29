@@ -35,14 +35,14 @@
       <div class="config">
         <b>{{ config }}</b>
         <label>
-          <input type="checkbox" name="enabled_context" id="enabled_context" class="checkbox"/>{{ chat_history }}
+          <input type="checkbox" name="enabled_context" id="enabled_context" class="checkbox" />{{ chat_history }}
         </label>
       </div>
       <div class="config">
         <b>{{ model_selection | safe }}</b>
-        <label><input type="radio" name="model" value="LLaMa 3.1" />LLaMa
+        <label><input type="radio" name="model" value="LLaMa 3.1" id="model_llama"/>LLaMa
           3.1</label>
-        <label><input type="radio" name="model" value="GPT-4o" />GPT-4o
+        <label><input type="radio" name="model" value="GPT-4o" id="model_gpt4o"/>GPT-4o
         </label>
       </div>
     </form>
@@ -55,6 +55,7 @@
     </p>
   </footer>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/cache.js') }}"></script>
 </body>
 
 </html>

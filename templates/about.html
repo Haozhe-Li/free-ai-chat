@@ -55,9 +55,6 @@
         {{ footer | safe}}
       </p>
     </footer>
-    <script>
-      var responseElement = document.querySelector(".aboutContent");
-            responseElement.style.display = "block";
-    </script>
+    <script src="{{ url_for('static', filename='js/about.js') }}"></script>
   </body>
 </html>

@@ -59,9 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!enableContext) {
       chatHistory = [];
     } else {
-      if (chatHistory.length > 5) {
-        // only keep the last five in chatHistory which a list
-        chatHistory = chatHistory.slice(chatHistory.length - 5);
+      if (chatHistory.length > 8) {
+        chatHistory = chatHistory.slice(chatHistory.length - 8);
       }
     }
 
