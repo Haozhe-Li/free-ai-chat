@@ -73,7 +73,11 @@ def about(lang="en"):
 @app.route("/<lang>/privacy")
 @language_redirect
 def privacy(lang="en"):
-    template_name = "privacy_zh.html" if lang == "zh" else "privacy.html"
+    template_name = "privacy_zh.html"
+    if lang == "en":
+        template_name = "privacy.html"
+    elif lang == "ja":
+        template_name = "privacy_ja.html"
     return render_template(template_name)
 
 @app.route('/favicon.ico')

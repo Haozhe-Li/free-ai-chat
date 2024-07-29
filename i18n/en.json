@@ -7,7 +7,7 @@
     "button": "Ask",
     "empty_input": "Just a quick note to make sure you have got all the right info in there and selected the model. 😊 :)",
     "language": "en",
-    "discalimer": "By continuing, you acknowledge AI-generated content and agree to our privacy terms. <b><a href=\"/about\">Have questions? </a></b>",
+    "discalimer": "By continuing, you acknowledge AI-generated content and agree to our <b><a href=\"/privacy\">Privacy Policy</a></b>.",
     "placeholder": "Enter your question",
     "footer": "© 2024 <b><a href=\"https://haozhe.li\">Haozhe Li</a></b>. All rights reserved."
 }
