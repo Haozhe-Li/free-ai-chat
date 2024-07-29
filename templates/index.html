@@ -1,74 +1,60 @@
 <!DOCTYPE html>
 <html lang="{{language}}">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ website_name }}</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='styles.css') }}"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}"
-    />
-    <link
-      rel="manifest"
-      href="{{ url_for('static', filename='favicon/site.webmanifest') }}"
-    />
-  </head>
-  <body>
-    <header>
-      <div class="logo">
-        <a href="/">
-          <img
-            src="{{ url_for('static', filename='favicon/android-chrome-512x512.png') }}"
-            alt="Logo"
-          />
-        </a>
-      </div>
-      <nav>
-        <a href="/about">{{ about }}</a>
-      </nav>
-    </header>
-    <main>
-      <h1>{{ title }}</h1>
-      <p class="subheading">{{ subtitle }}</p>
-      <form action="/generate" , method="post">
-        <textarea placeholder="{{ placeholder }}" name="input_text" id="input_text"></textarea>
-        <button type="submit">{{ button }}</button>
-        <div class="model-selection">
-          <label
-            ><input type="radio" name="model" value="LLaMa 3.1"/>LLaMa
-            3.1</label
-          >
-          <label
-            ><input type="radio" name="model" value="GPT-4o"/>GPT-4o
-          </label
-          >
-        </div>
-      </form>
 
-      <div class="response" style="display: block" id="response">{{ discalimer | safe }}</div>
-    </main>
-    <footer>
-      <p>
-        {{ footer | safe}}
-      </p>
-    </footer>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ website_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <link rel="apple-touch-icon" sizes="180x180"
+    href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}" />
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}" />
+  <link rel="icon" type="image/png" sizes="16x16"
+    href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}" />
+  <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}" />
+</head>
+
+<body>
+  <header>
+    <div class="logo">
+      <a href="/">
+        <img src="{{ url_for('static', filename='favicon/android-chrome-512x512.png') }}" alt="Logo" />
+      </a>
+    </div>
+    <nav>
+      <a href="/about">{{ about }}</a>
+    </nav>
+  </header>
+  <main>
+    <h1>{{ title }}</h1>
+    <p class="subheading">{{ subtitle }}</p>
+    <form action="/generate" , method="post">
+      <textarea placeholder="{{ placeholder }}" name="input_text" id="input_text"></textarea>
+      <button type="submit">{{ button }}</button>
+      <div class="config">
+        <b>{{ config }}</b>
+        <label>
+          <input type="checkbox" name="enabled_context" id="enabled_context" class="checkbox"/>{{ chat_history }}
+        </label>
+      </div>
+      <div class="config">
+        <b>{{ model_selection | safe }}</b>
+        <label><input type="radio" name="model" value="LLaMa 3.1" />LLaMa
+          3.1</label>
+        <label><input type="radio" name="model" value="GPT-4o" />GPT-4o
+        </label>
+      </div>
+    </form>
+
+    <div class="response" style="display: block" id="response">{{ discalimer | safe }}</div>
+  </main>
+  <footer>
+    <p>
+      {{ footer | safe}}
+    </p>
+  </footer>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
 </html>

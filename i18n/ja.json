@@ -6,7 +6,10 @@
     "subtitle": "AIと対話する",
     "button": "質問をする",
     "empty_input": "入力が空でないことと、モデルが選択されていることを確認してください :)",
-    "language": "zh-CN",
+    "language": "ja",
+    "config": "セッティング",
+    "chat_history": "チャット履歴",
+    "model_selection": "モデル",
     "discalimer": "利用を継続することで、コンテンツが人工知能によって生成されていることを認め、<b><a href=\"/privacy\">プライバシーポリシー</a></b>に同意したものとみなされます。",
     "placeholder": "質問を入力してください",
     "footer": "© 2024 <b><a href=\"https://haozhe.li\">イ・ホチョル</a></b>. 無断複写・転載を禁じます。"

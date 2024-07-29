@@ -153,7 +153,7 @@ footer {
     background-color: #f9f9f9;
 }
 
-.model-selection {
+.config {
     margin-top: 20px;
     display: flex;
     justify-content: center;
@@ -161,23 +161,23 @@ footer {
     gap: 10px;
 }
 
-.model-selection label {
+.config label {
     display: flex;
     align-items: center;
     cursor: pointer;
 }
 
-.model-selection input[type="checkbox"],
-.model-selection input[type="radio"] {
+.config input[type="checkbox"],
+.config input[type="radio"] {
     margin-right: 5px;
 }
 
-.model-selection label:hover {
+.config label:hover {
     text-decoration: underline;
 }
 
 @media (max-width: 600px) {
-    .model-selection {
+    .config {
         flex-direction: column;
         align-items: center;
     }

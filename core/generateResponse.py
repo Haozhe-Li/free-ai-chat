@@ -1,5 +1,4 @@
 import os
-import json
 import httpx
 
 from core.prompts import *
@@ -33,9 +32,11 @@ async def fetch(url: str, headers: dict, payload: dict):
     return response
 
 
-async def generate_response(input_text: str, model: str, role: str="") -> str:
+async def generate_response(
+    input_text: str, model: str, role: str = "", context: list = None
+) -> str:
     """
-    Generate response based on the input_text and model. 
+    Generate response based on the input_text and model.
     If model is GPT, use OpenAI API, otherwise use Groq API
     Input: input_text, model
     Output: response
@@ -60,25 +61,37 @@ async def generate_response(input_text: str, model: str, role: str="") -> str:
         "Content-Type": "application/json",
     }
 
+    messages = [
+        {
+            "role": "system",
+            "content": rolePrompt + startConversation,
+        }
+    ]
+
+    # add context which a list behind the message list
+    messages = messages + context if context else messages
+
+    messages.append(
+        {
+            "role": "user",
+            "content": input_text,
+        }
+    )
+
     payload = {
-        "messages": [
-            {
-                "role": "system",
-                "content": rolePrompt + startConversation,
-            },
-            {"role": "user", "content": input_text}
-        ],
+        "messages": messages,
         "model": model,
         "temperature": 1,
         "max_tokens": 2048,
-        "top_p": 1
+        "top_p": 1,
     }
     try:
         response = await fetch(url, headers, payload)
         return response.json()["choices"][0]["message"]["content"]
     except Exception as e:
         return "Error Occured in Backend, Error Code: 500"
-    
+
+
 def is_valid(input_text: str, model: str) -> bool:
     """
     Check if the input_text and model are valid
@@ -90,4 +103,3 @@ def is_valid(input_text: str, model: str) -> bool:
     if model not in models:
         return False
     return True
-

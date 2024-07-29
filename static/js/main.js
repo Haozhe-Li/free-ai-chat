@@ -1,6 +1,12 @@
 var message = ""
 var submessage = ""
 var pageLanguage = document.querySelector("html").lang;
+var chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+
+function updateChatHistory(newMessage) {
+  chatHistory.push(newMessage);
+  localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+}
 
 var warningMessages = {
   "noinput": {
@@ -48,6 +54,17 @@ document.addEventListener("DOMContentLoaded", function () {
       'input[name="model"]:checked'
     ).value;
 
+    var enableContext = document.getElementById("enabled_context").checked;
+
+    if (!enableContext) {
+      chatHistory = [];
+    } else {
+      if (chatHistory.length > 5) {
+        // only keep the last five in chatHistory which a list
+        chatHistory = chatHistory.slice(chatHistory.length - 5);
+      }
+    }
+
     var generatingTimeout = setTimeout(function () {
       responseElement.textContent = "Still generating...";
       responseElement.style.display = "block";
@@ -55,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetch("/generate", {
       method: "POST",
-      body: new URLSearchParams({ input_text: inputText, model: model }),
+      body: new URLSearchParams({ input_text: inputText, model: model, context: JSON.stringify(chatHistory) }),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -74,11 +91,15 @@ document.addEventListener("DOMContentLoaded", function () {
           message = data.response;
           submessage = `<i style="color: gray;">${model} is ready in ${duration} ms⚡️</i>`
           responseElement.innerHTML = submessage + "<br><br>" + message;
+          if (enableContext) {
+            updateChatHistory({ "role": "user", "content": inputText });
+            updateChatHistory({ "role": "assistant", "content": message });
+          }
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        clearTimeout(generatingTimeout); // Clear the timeout in case of error
+        clearTimeout(generatingTimeout);
       });
   };
 

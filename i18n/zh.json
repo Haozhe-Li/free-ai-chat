@@ -7,6 +7,9 @@
     "button": "提问",
     "empty_input": "确保您的输入不是空的，并且您已选择了模型:)",
     "language": "zh-CN",
+    "config": "设置：",
+    "chat_history": "联想聊天历史",
+    "model_selection": "模型：",
     "discalimer": "继续使用，即表示您已知晓内容为人工智能生成，并同意我们的<b><a href=\"/privacy\">隐私政策</a></b>。",
     "placeholder": "请输入您的问题",
     "footer": "© 2024 <b><a href=\"https://haozhe.li\">李浩哲</a></b>. 保留所有权利。"

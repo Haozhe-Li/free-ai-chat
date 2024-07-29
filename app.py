@@ -92,7 +92,8 @@ async def generate():
         return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
     input_text = request.form.get("input_text")
     model = request.form.get("model")
-    response = await generate_response(input_text, model)
+    context = json.loads(request.form.get("context")) if request.form.get("context") != "" else None
+    response = await generate_response(input_text=input_text, model=model, context=context)
     return jsonify({"response": response})
 
 
