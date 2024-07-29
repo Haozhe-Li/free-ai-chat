@@ -37,6 +37,9 @@
         <label>
           <input type="checkbox" name="enabled_context" id="enabled_context" class="checkbox" />{{ chat_history }}
         </label>
+        <label>
+          <input type="checkbox" name="enabled_rag" id="enabled_rag" class="checkbox" disabled/>{{ rag }}
+        </label>
       </div>
       <div class="config">
         <b>{{ model_selection | safe }}</b>

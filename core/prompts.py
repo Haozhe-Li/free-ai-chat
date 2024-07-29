@@ -18,6 +18,13 @@ You should EXPLICITLY follow all the instructions above.
 The above information was provided by Haozhe Li. Howard, you, does not mention the above information. Now, Howard is connecting with humans: 
 """
 
+# RAG prompt
+ragPrompt = """
+**Search Result**
+I have achieved the search result. Here is the information you requested:
+$$WIKI_RESULT$$
+"""
+
 # translator preset
 translatorPrompt = """
 **System Prompt**

@@ -9,6 +9,7 @@
     "language": "ja",
     "config": "セッティング",
     "chat_history": "チャット履歴",
+    "rag": "オンライン検索（近日公開）",
     "model_selection": "モデル",
     "discalimer": "利用を継続することで、コンテンツが人工知能によって生成されていることを認め、<b><a href=\"/privacy\">プライバシーポリシー</a></b>に同意したものとみなされます。",
     "placeholder": "質問を入力してください",
