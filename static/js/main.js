@@ -23,6 +23,16 @@ var warningMessages = {
     "en": "Please select a model",
     "zh-CN": "请选择一个模型",
     "ja": "モデルを選択してください"
+  },
+  "generating": {
+    "en": "Your response will be ready in a few seconds...",
+    "zh-CN": "您的回答将在几秒钟内准备好...",
+    "ja": "回答は数秒で準備されます..."
+  },
+  "rag_generating": {
+    "en": "Collecting information from the Internet,\nthis may take a about 15 seconds...",
+    "zh-CN": "正在联网收集信息，\n这可能需要大约15秒...",
+    "ja": "インターネットから情報を収集しています、\n約15秒かかる場合があります..."
   }
 };
 document.addEventListener("DOMContentLoaded", function () {
@@ -55,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ).value;
 
     var enableContext = document.getElementById("enabled_context").checked;
+    var enableRag = document.getElementById("enabled_rag").checked;
 
     if (!enableContext) {
       chatHistory = [];
@@ -65,13 +76,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     var generatingTimeout = setTimeout(function () {
-      responseElement.textContent = "Still generating...";
+      responseElement.textContent = enableRag ? warningMessages["rag_generating"][pageLanguage] : warningMessages["generating"][pageLanguage];
       responseElement.style.display = "block";
     }, 2000);
 
     fetch("/generate", {
       method: "POST",
-      body: new URLSearchParams({ input_text: inputText, model: model, context: JSON.stringify(chatHistory) }),
+      body: new URLSearchParams({ input_text: inputText, model: model, context: JSON.stringify(chatHistory), rag: enableRag }),
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
@@ -88,9 +99,9 @@ document.addEventListener("DOMContentLoaded", function () {
             "Error Occured in Frontend, Error Code: 401";
         } else {
           message = data.response;
-          submessage = `<i style="color: gray;">${model} is ready in ${duration} ms⚡️</i>`
+          submessage = `<i style="color: gray;">Our AI is ready in ${duration} ms⚡️</i>`
           responseElement.innerHTML = submessage + "<br><br>" + message;
-          if (enableContext) {
+          if (enableContext && !message.startsWith("Error")) {
             updateChatHistory({ "role": "user", "content": inputText });
             updateChatHistory({ "role": "assistant", "content": message });
           }

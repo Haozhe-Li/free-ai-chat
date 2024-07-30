@@ -93,7 +93,8 @@ async def generate():
     input_text = request.form.get("input_text")
     model = request.form.get("model")
     context = json.loads(request.form.get("context")) if request.form.get("context") != "" else None
-    response = await generate_response(input_text=input_text, model=model, context=context)
+    rag = request.form.get("rag") == 'true'
+    response = await generate_response(input_text=input_text, model=model, context=context, rag=rag)
     return jsonify({"response": response})
 
 

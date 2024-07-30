@@ -1,7 +1,9 @@
 import os
-import httpx
+import asyncio
 
+from core.utils import fetch
 from core.prompts import *
+from core.rag import rag_search
 
 groq_url = "https://api.groq.com/openai/v1/chat/completions"
 openai_url = "https://api.openai.com/v1/chat/completions"
@@ -14,6 +16,7 @@ models = {
     "LLaMa 3.1": "llama-3.1-8b-instant",
     "Gemma 2": "gemma2-9b-it",
     "GPT-4o": "gpt-4o-mini",
+    "Auto": "auto",
 }
 
 role = {
@@ -21,19 +24,8 @@ role = {
 }
 
 
-async def fetch(url: str, headers: dict, payload: dict):
-    """
-    Fetch data from the given url with headers and payload
-    Input: url, headers, payload
-    Output: response
-    """
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url, headers=headers, json=payload, timeout=10)
-    return response
-
-
 async def generate_response(
-    input_text: str, model: str, role: str = "", context: list = None
+    input_text: str, model: str, role: str = "", context: list = None, rag: bool = False
 ) -> str:
     """
     Generate response based on the input_text and model.
@@ -43,32 +35,26 @@ async def generate_response(
     """
     if not is_valid(input_text, model):
         return "Error Occured in Backend, Error Code: 400"
-    model = models[model]
-    if "gpt" in model:
-        url = openai_url
-        api_key = openai_api_key
-    else:
-        url = groq_url
-        api_key = groq_api_key
 
-    if role != "":
-        rolePrompt = role[role]
-    else:
-        rolePrompt = systemPrompt
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
+    try:
+        ragPrompt = ""
+        reference = ""
+        if rag:
+            response = await rag_search(input_text)
+            if response != "":
+                ragPrompt = response['ragprompt']
+                reference = response['reference']
+    except Exception as e:
+        ragPrompt = ""
+        reference = ""
 
     messages = [
         {
             "role": "system",
-            "content": rolePrompt + startConversation,
+            "content": systemPrompt + ragPrompt + startConversation,
         }
     ]
 
-    # add context which a list behind the message list
     messages = messages + context if context else messages
 
     messages.append(
@@ -77,6 +63,22 @@ async def generate_response(
             "content": input_text,
         }
     )
+
+    model = models[model]
+    if model == "auto":
+        model = "gpt-4o-mini" if len(messages) < 4 else "llama-3.1-8b-instant"
+
+    if "gpt" in model:
+        url = openai_url
+        api_key = openai_api_key
+    else:
+        url = groq_url
+        api_key = groq_api_key
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
 
     payload = {
         "messages": messages,
@@ -87,7 +89,9 @@ async def generate_response(
     }
     try:
         response = await fetch(url, headers, payload)
-        return response.json()["choices"][0]["message"]["content"]
+        if response.status_code != 200:
+            return "Error Occured in Backend, Error Code: 500"
+        return response.json()["choices"][0]["message"]["content"] + reference
     except Exception as e:
         return "Error Occured in Backend, Error Code: 500"
 
@@ -103,3 +107,7 @@ def is_valid(input_text: str, model: str) -> bool:
     if model not in models:
         return False
     return True
+
+
+if __name__ == "__main__":
+    print(asyncio.run(generate_response("What is seattle?", "LLaMa 3.1", rag=True)))

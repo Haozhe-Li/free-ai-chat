@@ -9,7 +9,7 @@
     "language": "en",
     "config": "Settings: ",
     "chat_history": "Enabled Chat History",
-    "rag": "Online Search (Coming Soon)",
+    "rag": "Online Search (beta)",
     "model_selection": "Model: ",
     "discalimer": "By continuing, you acknowledge AI-generated content and agree to our <b><a href=\"/privacy\">Privacy Policy</a></b>.",
     "placeholder": "Enter your question",
