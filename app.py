@@ -1,7 +1,4 @@
 from flask import Flask, Response, render_template, request, jsonify, redirect
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-from flask_limiter.errors import RateLimitExceeded
 from core.generateResponse import *
 from functools import wraps
 import json
@@ -95,11 +92,6 @@ async def generate():
     response = await generate_response(input_text=input_text, model=model, context=context, rag=rag)
     logging.info(f"[app.py] Finished Generation. Response: {response}")
     return jsonify({"response": response})
-
-
-@app.errorhandler(RateLimitExceeded)
-def ratelimit_handler(e):
-    return jsonify({"response": "Error Occured in Backend, Error Code: 429"})
 
 @app.errorhandler(404)
 def page_not_found(e):
