@@ -1,3 +1,4 @@
 flask[async]
 flask_limiter==3.7.0
 httpx==0.27.0
+wikipedia==1.4.0
