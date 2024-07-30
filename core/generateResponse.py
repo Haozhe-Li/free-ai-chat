@@ -1,7 +1,8 @@
 import os
 import asyncio
+import logging
 
-from core.utils import fetch
+from core.utils import fetch, post_clean, is_valid
 from core.prompts import *
 from core.rag import rag_search
 
@@ -34,17 +35,20 @@ async def generate_response(
     Output: response
     """
     if not is_valid(input_text, model):
+        logging.error(f"[generateResponse.py] Invalid input_text: {input_text}, model: {model}")
         return "Error Occured in Backend, Error Code: 400"
 
     try:
         ragPrompt = ""
         reference = ""
         if rag:
+            logging.info(f"[generateResponse.py] RAG search with input_text: {input_text}")
             response = await rag_search(input_text)
             if response != "":
                 ragPrompt = response['ragprompt']
                 reference = response['reference']
     except Exception as e:
+        logging.error(f"[generateResponse.py] Error in RAG search: {e}, continue without RAG")
         ragPrompt = ""
         reference = ""
 
@@ -67,6 +71,7 @@ async def generate_response(
     model = models[model]
     if model == "auto":
         model = "gpt-4o-mini" if len(messages) < 4 else "llama-3.1-8b-instant"
+        logging.info(f"[generateResponse.py] Auto model selection: {model}")
 
     if "gpt" in model:
         url = openai_url
@@ -87,26 +92,17 @@ async def generate_response(
         "max_tokens": 2048,
         "top_p": 1,
     }
+    logging.info(f"[generateResponse.py] Prepare for request.")
     try:
         response = await fetch(url, headers, payload)
         if response.status_code != 200:
+            logging.error(f"[generateResponse.py] Error in response: {response.status_code}, {response.json()}")
             return "Error Occured in Backend, Error Code: 500"
-        return response.json()["choices"][0]["message"]["content"] + reference
+        logging.info(f"[generateResponse.py] Response received.")
+        return post_clean(response.json()["choices"][0]["message"]["content"]) + reference
     except Exception as e:
+        logging.error(f"[generateResponse.py] Error in request: {str(e)}")
         return "Error Occured in Backend, Error Code: 500"
-
-
-def is_valid(input_text: str, model: str) -> bool:
-    """
-    Check if the input_text and model are valid
-    Input: input_text, model
-    Output: True if valid, False otherwise
-    """
-    if not input_text or not model:
-        return False
-    if model not in models:
-        return False
-    return True
 
 
 if __name__ == "__main__":

@@ -33,6 +33,11 @@ var warningMessages = {
     "en": "Collecting information from the Internet,\nthis may take a about 15 seconds...",
     "zh-CN": "正在联网收集信息，\n这可能需要大约15秒...",
     "ja": "インターネットから情報を収集しています、\n約15秒かかる場合があります..."
+  },
+  "noresponse": {
+    "en": "No response from the server, please try again later",
+    "zh-CN": "服务器未响应，请稍后重试",
+    "ja": "サーバーからの応答がありません、後でもう一度お試しください"
   }
 };
 document.addEventListener("DOMContentLoaded", function () {
@@ -75,10 +80,15 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    var generatingTimeout = setTimeout(function () {
+    var slowGenerating = setTimeout(function () {
       responseElement.textContent = enableRag ? warningMessages["rag_generating"][pageLanguage] : warningMessages["generating"][pageLanguage];
       responseElement.style.display = "block";
     }, 2000);
+
+    var NoResponseTimeout = setTimeout(function () {
+      responseElement.textContent = warningMessages["noresponse"][pageLanguage];
+      responseElement.style.display = "block";
+    }, 30000);
 
     fetch("/generate", {
       method: "POST",
@@ -89,7 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((response) => response.json())
       .then((data) => {
-        clearTimeout(generatingTimeout);
+        clearTimeout(slowGenerating);
+        clearTimeout(NoResponseTimeout);
         var endTime = Date.now();
         var duration = endTime - startTime;
         var responseElement = document.querySelector(".response");
@@ -109,7 +120,8 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch((error) => {
         console.error("Error:", error);
-        clearTimeout(generatingTimeout);
+        clearTimeout(slowGenerating);
+        clearTimeout(NoResponseTimeout);
       });
   };
 

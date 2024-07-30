@@ -5,11 +5,9 @@ from flask_limiter.errors import RateLimitExceeded
 from core.generateResponse import *
 from functools import wraps
 import json
+import logging
 
-app = Flask(__name__)
-limiter = Limiter(
-    get_remote_address, app=app, default_limits=["10 per minute", "300 per hour"]
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
 app = Flask(__name__)
 
@@ -86,7 +84,6 @@ def favicon():
 
 
 @app.route("/generate", methods=["POST"])
-@limiter.limit("30 per minute")
 async def generate():
     if not request.referrer.startswith(request.host_url):
         return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
@@ -94,7 +91,9 @@ async def generate():
     model = request.form.get("model")
     context = json.loads(request.form.get("context")) if request.form.get("context") != "" else None
     rag = request.form.get("rag") == 'true'
+    logging.info(f"[app.py] Received request with input_text: {input_text}, model: {model}, context: {context}, rag: {rag}")
     response = await generate_response(input_text=input_text, model=model, context=context, rag=rag)
+    logging.info(f"[app.py] Finished Generation. Response: {response}")
     return jsonify({"response": response})
 
 

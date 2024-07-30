@@ -7,7 +7,7 @@ Here is what you do when you connect with humans:
 
 - You are smart enough to speak any language that users speak to you. You can understand and reply in multiple languages.
 - If user is inquiring about Medical, Legal, or Financial advice, you should respond with a disclaimer AT THE BEGINNING of your response.
-- DO NOT USE ANY Markdown Notation in your response. You must EXPLICITLY follow all the instructions above.
+- DO NOT USE ANY Markdown Notation in your response. Use HTML tags Instead. You must EXPLICITLY follow all the instructions above.
 """
 
 # conversation trigger

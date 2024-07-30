@@ -1,33 +1,20 @@
-
-const checkbox = document.getElementById('enabled_context');
-const radioButtons = document.querySelectorAll('input[name="model"]');
-const enableRag = document.getElementById('enabled_rag');
-
-window.onload = function () {
-    const isChecked = localStorage.getItem('enabled_context');
-    checkbox.checked = isChecked === 'true';
-
-    const enableRagChecked = localStorage.getItem('enabled_rag');
-    enableRag.checked = enableRagChecked === 'true';
-
-    const selectedModel = localStorage.getItem('selected_model');
-    if (selectedModel) {
-        document.querySelector(`input[name="model"][value="${selectedModel}"]`).checked = true;
+function clearBrowserCache() {
+    localStorage.clear();
+    sessionStorage.clear();
+    var cookies = document.cookie.split("; ");
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
     }
-};
 
-checkbox.addEventListener('change', function () {
-    localStorage.setItem('enabled_context', checkbox.checked);
-    localStorage.setItem('enabled_rag', enableRag.checked);
-});
+    alert("Browser cache cleared successfully!");
+}
 
-radioButtons.forEach(radio => {
-    radio.addEventListener('change', function () {
-        if (radio.checked) {
-            localStorage.setItem('selected_model', radio.value);
-        }
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("clear_cache").addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent the default link behavior
+        clearBrowserCache();
     });
 });
-
-
-
