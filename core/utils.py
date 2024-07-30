@@ -1,4 +1,5 @@
 import httpx
+import re
 
 models = {
     "Mixtral": "mixtral-8x7b-32768",
@@ -21,9 +22,15 @@ async def fetch(url: str, headers: dict, payload: dict):
 
 
 def post_clean(response_text: str):
-    # clean the response text, turn all markdown format if any to html tags
+    """
+    Clean the response_text
+    Input: response_text
+    Output: cleaned response_text
+    """
     response_text = response_text.replace("\n", "<br>")
-    response_text = response_text.replace("**", "")
+    response_text = re.sub(r"\*\*(.*?)\*\*", r"<b>\1</b>", response_text)
+    response_text = re.sub(r"\*(.*?)\*", r"<i>\1</i>", response_text)
+    response_text = re.sub(r"__(.*?)__", r"<u>\1</u>", response_text)
     return response_text
 
 

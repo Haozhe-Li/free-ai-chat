@@ -9,6 +9,13 @@ from core.prompts import keywordPrompt, ragPromptTemplate
 
 
 async def search_wiki(query: list) -> dict:
+    """
+    Search Wikipedia for the query and return the summary, url and title
+    Input: query
+    Output: result
+    """
+
+    # Search Wikipedia for the query
     logging.info(f"[rag.py] Searching Wikipedia for query: {query}")
     result = {}
     for q in query:
@@ -27,6 +34,13 @@ async def search_wiki(query: list) -> dict:
     return result
 
 async def generate_keywords(input_text: str) -> list:
+    """
+    Generate keywords for the input_text
+    Input: input_text
+    Output: keywords
+    """
+
+    # Generate keywords for the input_text
     logging.info(f"[rag.py] Generating keywords for input_text: {input_text}")
     groq_url = "https://api.groq.com/openai/v1/chat/completions"
     model = "llama-3.1-8b-instant"
@@ -50,6 +64,8 @@ async def generate_keywords(input_text: str) -> list:
         ],
         "response_format": {"type": "json_object"},
     }
+
+    # Fetch the response
     response = await fetch(groq_url, headers, payload)
     if response.status_code != 200:
         logging.error(f"[rag.py] Error in generating keywords: {response.json()}")
@@ -59,6 +75,12 @@ async def generate_keywords(input_text: str) -> list:
     return response
 
 async def rag_search(input_text: str) -> dict:
+    """
+    Search Wikipedia for the input_text and return the result
+    Input: input_text
+    Output: ragPrompt"""
+    
+    # Search Wikipedia for the input_text
     logging.info(f"[rag.py] RAG search with input_text: {input_text}")
     ragPrompt = ragPromptTemplate
     reference = ""
