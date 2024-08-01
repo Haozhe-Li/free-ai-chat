@@ -122,6 +122,46 @@ button:hover {
     word-wrap: break-word;
     opacity: 0;
     animation: fadeIn 1s forwards;
+    text-align: left;
+}
+
+/* add styles for bullet point */
+.response ul {
+    list-style-type: disc;
+    margin-left: 20px;
+}
+
+/* add styles for numbered list */
+.response ol {
+    list-style-type: decimal;
+    margin-left: 20px;
+}
+
+.response code {
+    display: block;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.response pre {
+    display: block;
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow-x: auto;
+    white-space: pre-wrap; /* Ensures proper indentation */
+    word-wrap: break-word; /* Ensures long lines break properly */
+}
+
+/* add response for class "submessage" */
+.response .submessage {
+    color: gray;
+    font-style: italic;
+    text-align: center;
 }
 
 .response:hover {

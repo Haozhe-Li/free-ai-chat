@@ -23,7 +23,7 @@ async def search_wiki(query: list) -> dict:
             searching_results = wikipedia.search(q)
             if len(searching_results) > 0:
                 searching_result = searching_results[0]
-                summary = wikipedia.summary(searching_result)[0:1000] + "..."
+                summary = wikipedia.summary(searching_result)[0:5000] + "..." if len(wikipedia.summary(searching_result)) > 5000 else wikipedia.summary(searching_result)
                 url = wikipedia.page(searching_result).url
                 title = wikipedia.page(searching_result).title
                 result[q] = {'summary': summary, 'url': url, 'title': title}

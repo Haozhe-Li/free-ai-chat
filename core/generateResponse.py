@@ -2,7 +2,7 @@ import os
 import asyncio
 import logging
 
-from core.utils import fetch, post_clean, is_valid
+from core.utils import fetch, post_clean
 from core.prompts import *
 from core.rag import rag_search
 
@@ -34,13 +34,6 @@ async def generate_response(
     Input: input_text, model
     Output: response
     """
-
-    # Check if input_text and model are valid
-    if not is_valid(input_text, model):
-        logging.error(
-            f"[generateResponse.py] Invalid input_text: {input_text}, model: {model}"
-        )
-        return "Error Occured in Backend, Error Code: 400"
     
     # Check if rag, and get ragPrompt and reference
     try:
@@ -53,7 +46,7 @@ async def generate_response(
             response = await rag_search(input_text)
             if response != "":
                 ragPrompt = response["ragprompt"]
-                reference = response["reference"]
+                # reference = response["reference"]
     except Exception as e:
         logging.error(
             f"[generateResponse.py] Error in RAG search: {e}, continue without RAG"
@@ -112,7 +105,7 @@ async def generate_response(
             return "Error Occured in Backend, Error Code: 500"
         logging.info(f"[generateResponse.py] Response received.")
         return (
-            post_clean(response.json()["choices"][0]["message"]["content"]) + reference
+            post_clean(response.json()["choices"][0]["message"]["content"]) # + reference
         )
     except Exception as e:
         logging.error(f"[generateResponse.py] Error in request: {str(e)}")

@@ -8,6 +8,9 @@ Here is what you do when you connect with humans:
 - You are smart enough to speak any language that users speak to you. You can understand and reply in multiple languages.
 - If user is inquiring about Medical, Legal, or Financial advice, you should respond with a disclaimer AT THE BEGINNING of your response.
 - You must EXPLICITLY follow all the instructions above.
+
+**Response Format**
+You should use Markdown Notation to format your response.
 """
 
 # conversation trigger
@@ -21,10 +24,10 @@ The above information was provided by Haozhe Li. Howard, you, does not mention t
 # RAG prompt
 ragPromptTemplate = """
 **Search Result**
-I have achieved the search result through wikipedia. Your response should be based on the information I give to you.
+I have the following the search result through wikipedia. Your response should be based on the information I give to you.
 For your response, you must EXPLICITLY follow:
 - Use at least direct quote from the original source, and provide the source link when you quote;
-- The source link should follow <i><b><a href="{url}">{title}</a></b></i> format;
+- At the end of your response, proide a Reference section with the source link;
 ...
 
 Now, I will give you the source information:
@@ -32,12 +35,17 @@ Now, I will give you the source information:
 
 # keyword prompt
 keywordPrompt = """
-From now on, you are a keyword making machine. Please go through the texts I give to you, and give me the keywords you think are the most important. 
+From now on, you are a wikipedia searcher. You will be given a text,
+and you need to provide the keywords you think that will be needed
+for searching on Wikipedia.
 
 Please follow the following requirements:
-- The keywords should be no more than 2. If you want, you can provide me 0 keyword;
+- The keywords should be close enough to the text. It is better if you can find the keywords in original text;
+- You are allowed to provide 0 keywords if you think no keywords are needed;
+- You are allowed to provide up to 3 keywords;
+- The keywords should be a tech term, a name, a place, or a concept, etc.
+- The keywords can be a compound word or short term, e.g. "machine learning", "deep learning";
 - The keywords should be in lower case;
-- The keywords should be a tech term, a name, a place, or a concept, etc. It must be critical to the text.
 - The keywords must be in English. If the text is in another language, you should translate it to English first.
 
 Response Format:
