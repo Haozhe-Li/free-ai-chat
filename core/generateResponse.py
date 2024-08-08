@@ -26,7 +26,7 @@ role = {
 
 
 async def generate_response(
-    input_text: str, model: str, role: str = "", context: list = None, rag: bool = False
+    input_text: str, model: str, role: str = "", context: list = None, rag: bool = False, task_id: str = ""
 ) -> str:
     """
     Generate response based on the input_text and model.
@@ -41,15 +41,15 @@ async def generate_response(
         reference = ""
         if rag:
             logging.info(
-                f"[generateResponse.py] RAG search with input_text: {input_text}"
+                f"[generateResponse.py] RAG search with task_id: {task_id}. input_text: {input_text}"
             )
-            response = await rag_search(input_text)
+            response = await rag_search(input_text=input_text, task_id=task_id)
             if response != "":
                 ragPrompt = response["ragprompt"]
                 # reference = response["reference"]
     except Exception as e:
         logging.error(
-            f"[generateResponse.py] Error in RAG search: {e}, continue without RAG"
+            f"[generateResponse.py] Error in RAG search with task_id: {task_id}. {e}, continue without RAG"
         )
         ragPrompt = ""
         reference = ""
@@ -75,7 +75,7 @@ async def generate_response(
     # If model is auto, select model based on number of messages
     if model == "auto":
         model = "gpt-4o-mini" if len(messages) < 4 else "llama-3.1-8b-instant"
-        logging.info(f"[generateResponse.py] Auto model selection: {model}")
+        logging.info(f"[generateResponse.py] Auto model selection with task_id: {task_id}. {model}")
     if "gpt" in model:
         url = openai_url
         api_key = openai_api_key
@@ -92,15 +92,16 @@ async def generate_response(
         "temperature": 1,
         "max_tokens": 2048,
         "top_p": 1,
+        "stream": True
     }
 
     # Send request to API
-    logging.info(f"[generateResponse.py] Prepare for request.")
+    logging.info(f"[generateResponse.py] Prepare for request with task_id: {task_id}")
     try:
         response = await fetch(url, headers, payload)
         if response.status_code != 200:
             logging.error(
-                f"[generateResponse.py] Error in response: {response.status_code}, {response.json()}"
+                f"[generateResponse.py] Error in response with task_id: {task_id}. {response.status_code}, {response.json()}"
             )
             return "Error Occured in Backend, Error Code: 500"
         logging.info(f"[generateResponse.py] Response received.")
@@ -108,7 +109,7 @@ async def generate_response(
             post_clean(response.json()["choices"][0]["message"]["content"]) # + reference
         )
     except Exception as e:
-        logging.error(f"[generateResponse.py] Error in request: {str(e)}")
+        logging.error(f"[generateResponse.py] Error in request with task_id: {task_id}. {str(e)}")
         return "Error Occured in Backend, Error Code: 500"
 
 

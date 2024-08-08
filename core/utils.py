@@ -1,5 +1,15 @@
 import httpx
+import random
 import markdown
+
+
+def gen_task_id():
+    """
+    Generate a random task id
+    Input: None
+    Output: task_id
+    """
+    return str(random.randint(100000, 999999))
 
 
 async def fetch(url: str, headers: dict, payload: dict):
@@ -13,9 +23,6 @@ async def fetch(url: str, headers: dict, payload: dict):
     return response
 
 
-import re
-
-
 def post_clean(response_text: str) -> str:
     """
     Clean the response_text
@@ -23,4 +30,3 @@ def post_clean(response_text: str) -> str:
     Output: cleaned response_text
     """
     return markdown.markdown(response_text)
-    

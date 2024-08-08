@@ -1,12 +1,17 @@
-from flask import Flask, Response, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify, redirect
 from core.generateResponse import *
+from core.utils import gen_task_id
 from functools import wraps
 import json
 import logging
 
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    level=int(20),
+    format="[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s",
+    datefmt="%Y-%d-%m %H:%M:%S",
+    encoding="utf-8",
 )
+
 
 app = Flask(__name__)
 
@@ -107,7 +112,10 @@ async def generate():
     """
     Generate the response based on the input_text and model
     """
+    task_id = gen_task_id()
+    logging.info(f"[app.py] Received request with task_id: {task_id}")
     if not request.referrer.startswith(request.host_url):
+        logging.info(f"[app.py] Error: Unauthorized request with task_id: {task_id}")
         return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
     input_text = request.form.get("input_text")
     model = request.form.get("model")
@@ -118,12 +126,14 @@ async def generate():
     )
     rag = request.form.get("rag") == "true"
     logging.info(
-        f"[app.py] Received request with input_text: {input_text}, model: {model}, context: {context}, rag: {rag}"
+        f"[app.py] Received request with task_id: {task_id}. input_text: {input_text}, model: {model}, context: {context}, rag: {rag}"
     )
     response = await generate_response(
-        input_text=input_text, model=model, context=context, rag=rag
+        input_text=input_text, model=model, context=context, rag=rag, task_id=task_id
     )
-    logging.info(f"[app.py] Finished Generation. Response: {response}")
+    logging.info(
+        f"[app.py] Finished Generation with task_id: {task_id}. Response: {response}"
+    )
     return jsonify({"response": response})
 
 
@@ -132,7 +142,9 @@ def page_not_found(e):
     """
     Render the 404 page
     """
-    content = get_content("404", "en")
+    content = get_content(
+        "404", request.accept_languages.best_match(["en", "zh", "ja"], default="en")
+    )
     content["details"] = content["details"].replace("$$path$$", f"<b>{request.url}</b>")
     return render_template("404.html", **content), 404
 
