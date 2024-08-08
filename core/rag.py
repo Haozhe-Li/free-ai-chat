@@ -1,45 +1,19 @@
-import wikipedia
 import os
 import asyncio
 import json
 import logging
+import random
 from core.utils import fetch
-from core.prompts import keywordPrompt, ragPromptTemplate
+from core.prompts import activateRagPrompt, ragPromptTemplate
+from tavily import TavilyClient
+
+def init_rag_client() -> TavilyClient:
+    api_keys = [os.getenv("TAVILY_API_KEY_1"), os.getenv("TAVILY_API_KEY_2")]
+    tavily_client = TavilyClient(api_key=random.choice(api_keys))
+    return tavily_client
 
 
-async def search_wiki(query: list) -> dict:
-    """
-    Search Wikipedia for the query and return the summary, url and title
-    Input: query
-    Output: result
-    """
-    result = {}
-    for q in query:
-        try:
-            searching_results = wikipedia.search(q)
-            if len(searching_results) > 0:
-                searching_result = searching_results[0]
-                summary = (
-                    wikipedia.summary(searching_result)[0:5000] + "..."
-                    if len(wikipedia.summary(searching_result)) > 5000
-                    else wikipedia.summary(searching_result)
-                )
-                url = wikipedia.page(searching_result).url
-                title = wikipedia.page(searching_result).title
-                result[q] = {"summary": summary, "url": url, "title": title}
-        except Exception as e:
-            continue
-    return result
-
-
-async def generate_keywords(input_text: str) -> list:
-    """
-    Generate keywords for the input_text
-    Input: input_text
-    Output: keywords
-    """
-
-    # Generate keywords for the input_text
+async def activate_rag(input_text: str, task_id: str = "") -> dict:
     groq_url = "https://api.groq.com/openai/v1/chat/completions"
     model = "llama-3.1-8b-instant"
     groq_api_key = os.getenv("GROQ_API_KEY")
@@ -53,7 +27,7 @@ async def generate_keywords(input_text: str) -> list:
         "messages": [
             {
                 "role": "system",
-                "content": keywordPrompt,
+                "content": activateRagPrompt,
             },
             {
                 "role": "user",
@@ -62,15 +36,11 @@ async def generate_keywords(input_text: str) -> list:
         ],
         "response_format": {"type": "json_object"},
     }
-
-    # Fetch the response
     response = await fetch(groq_url, headers, payload)
     if response.status_code != 200:
-        return []
-    response = json.loads(response.json()["choices"][0]["message"]["content"])[
-        "keywords"
-    ]
-    return response
+        return {"enableSearch": False}
+    result = json.loads(response.json()["choices"][0]["message"]["content"])
+    return result
 
 
 async def rag_search(input_text: str, task_id: str = "") -> dict:
@@ -78,35 +48,25 @@ async def rag_search(input_text: str, task_id: str = "") -> dict:
     Search Wikipedia for the input_text and return the result
     Input: input_text
     Output: ragPrompt"""
-
-    # Search Wikipedia for the input_text
     logging.info(
         f"[rag.py] RAG search with input_text with task_id: {task_id}. {input_text}"
     )
+    decision = await activate_rag(input_text=input_text, task_id=task_id)
+    if decision["enableSearch"] == False:
+        logging.info(
+            f"[rag.py] RAG search with input_text with task_id: {task_id}. {input_text} - No search"
+        )
+        return {"ragprompt": ""}
     ragPrompt = ragPromptTemplate
-    reference = ""
-    keywords = await generate_keywords(input_text)
-    if keywords == []:
-        logging.error(
-            f"[rag.py] No keywords generated for input_text with task_id: {task_id}. {input_text}"
-        )
-        return ""
-    search_result = await search_wiki(keywords)
-    if len(search_result) == 0:
-        logging.error(
-            f"[rag.py] No search result found for keywords with task_id: {task_id}. {keywords}"
-        )
-        return ""
-    for key, value in search_result.items():
-        ragPrompt += f"\n\nResult for {key}: \n\nSummary: {value['summary']},\n\nURL: {value['url']},\n\n Title: {value['title']} - Wikipedia"
-        reference += (
-            f"""<br><i><a href="{value['url']}">{value['title']} - Wikipedia</a></i>"""
-        )
     logging.info(
-        f"[rag.py] RAG search result  with task_id: {task_id}. {str(ragPrompt)[0:50]}"
+        f"[rag.py] RAG search with input_text with task_id: {task_id}. Query {decision['query']}"
     )
-    return {"ragprompt": ragPrompt, "reference": "<br><br><b>Reference</b>" + reference}
+    ragPrompt += init_rag_client().qna_search(query=decision["query"])
+    logging.info(
+        f"[rag.py] RAG search with input_text with task_id: {task_id}. Search completed: {ragPrompt}"
+    )
+    return {"ragprompt": ragPrompt}
 
 
 if __name__ == "__main__":
-    print(asyncio.run(rag_search("What is seattle?")))
+    print(asyncio.run(rag_search("What is the time now in New York?")))

@@ -10,7 +10,7 @@ Here is what you do when you connect with humans:
 - You must EXPLICITLY follow all the instructions above.
 
 **Response Format**
-You should use Markdown Notation to format your response.
+You should use PLAIN TEXT ONLY to format your response.
 """
 
 # conversation trigger
@@ -24,11 +24,7 @@ The above information was provided by Haozhe Li. Howard, you, does not mention t
 # RAG prompt
 ragPromptTemplate = """
 **Search Result**
-I have the following the search result through wikipedia. Your response should be based on the information I give to you.
-For your response, you must EXPLICITLY follow:
-- Use at least direct quote from the original source, and provide the source link when you quote;
-- At the end of your response, proide a Reference section with the source link;
-...
+I have the following the search result through the internet. Your response should be based on the information I give to you.
 
 Now, I will give you the source information:
 """
@@ -55,6 +51,28 @@ Response Format:
 EXPLICITLY follow all the instructions above.
 
 Now here's your text:
+"""
+
+# Activate RAG Prompt
+activateRagPrompt = """
+**System Prompt**
+From now on, you are a advanced AI model designed to assist users in answering questions. You will be given a text, and
+you should decide whether the information should be searched online. Text with these properties should be searched online:
+- The text is time-sensitive: This includes questions about the current time, date, weather, etc.
+- The text requires news or recent information.
+- The text contains information you are not sure about.
+- The text is a question about Large Language Model (LLM) itself or any other AI related questions.
+
+**Response Format**
+You should consider whether you enable search first, then collect the query.
+You should format your response in json format with two keys:
+- "enableSearch": true or false (the value should be a boolean, this means whether the text should be searched online after you make the decision)
+- "query": the text that you want to search online (this should be the original text you received, or the extracted question from the text which is highly relevent to the text)
+
+Noted that if you think the search is not needed, leave the "query" key as an empty string. If you enable search, 
+you MUST provide the query.
+
+EXPLICITLY follow all the instructions above. Here's your text to consider:
 """
 
 # translator preset

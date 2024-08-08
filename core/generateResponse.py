@@ -38,7 +38,6 @@ async def generate_response(
     # Check if rag, and get ragPrompt and reference
     try:
         ragPrompt = ""
-        reference = ""
         if rag:
             logging.info(
                 f"[generateResponse.py] RAG search with task_id: {task_id}. input_text: {input_text}"
@@ -51,9 +50,7 @@ async def generate_response(
         logging.error(
             f"[generateResponse.py] Error in RAG search with task_id: {task_id}. {e}, continue without RAG"
         )
-        ragPrompt = ""
-        reference = ""
-    
+        ragPrompt = ""    
     # Prepare messages
     messages = [
         {
@@ -106,7 +103,7 @@ async def generate_response(
             return "Error Occured in Backend, Error Code: 500"
         logging.info(f"[generateResponse.py] Response received.")
         return (
-            post_clean(response.json()["choices"][0]["message"]["content"]) # + reference
+            response.json()["choices"][0]["message"]["content"]
         )
     except Exception as e:
         logging.error(f"[generateResponse.py] Error in request with task_id: {task_id}. {str(e)}")

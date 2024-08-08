@@ -1,4 +1,4 @@
 flask[async]
 httpx==0.27.0
-wikipedia==1.4.0
+tavily-python==0.3.6
 markdown==3.4.1
