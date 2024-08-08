@@ -92,7 +92,7 @@ async def generate_response(
         "temperature": 1,
         "max_tokens": 2048,
         "top_p": 1,
-        "stream": True
+        # "stream": True
     }
 
     # Send request to API
