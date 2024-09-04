@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# filename: generateResponse.py
+# author: Haozhe Li
+# date: 2024-09-01
+# description: Code for RAG search, and decision making for RAG search.
+
 import os
 import asyncio
 import json

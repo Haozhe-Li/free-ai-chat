@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# filename: generateResponse.py
+# author: Haozhe Li
+# date: 2024-09-01
+# description: utils functions for the AI models.
+
 import httpx
 import random
 import markdown

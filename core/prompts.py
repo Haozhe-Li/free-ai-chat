@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# filename: prompts.py
+# author: Haozhe Li
+# date: 2024-09-01
+# description: a global collections of prompts for the AI models.
+
 # default system prompt
 systemPrompt = """
 **System Prompt**

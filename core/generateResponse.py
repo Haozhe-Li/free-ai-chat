@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# filename: generateResponse.py
+# author: Haozhe Li
+# date: 2024-09-01
+# description: core code for generating response based on the input text and model.
+
 import os
 import asyncio
 import logging

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# filename: app.py
+# author: Haozhe Li
+# date: 2024-09-01
+# description: Flask app for the website. Router for the website.
+
 from flask import Flask, render_template, request, jsonify, redirect
 from core.generateResponse import *
 from core.utils import gen_task_id
