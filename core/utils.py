@@ -7,6 +7,8 @@
 import httpx
 import random
 import markdown
+import Levenshtein
+from core.prompts import systemPrompt
 
 
 def gen_task_id():
@@ -28,6 +30,10 @@ async def fetch(url: str, headers: dict, payload: dict):
         response = await client.post(url, headers=headers, json=payload, timeout=10)
     return response
 
+def string_similarity(str1, str2):
+    distance = Levenshtein.distance(str1, str2)
+    similarity = 1 - (distance / max(len(str1), len(str2)))
+    return similarity
 
 def post_clean(response_text: str) -> str:
     """
@@ -35,4 +41,7 @@ def post_clean(response_text: str) -> str:
     Input: response_text
     Output: cleaned response_text
     """
+    # check if prompts leaked
+    if string_similarity(response_text, systemPrompt) > 0.5:
+        return "Sorry, I can't provide that information."
     return markdown.markdown(response_text)
