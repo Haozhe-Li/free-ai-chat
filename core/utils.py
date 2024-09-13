@@ -42,6 +42,6 @@ def post_clean(response_text: str) -> str:
     Output: cleaned response_text
     """
     # check if prompts leaked
-    if string_similarity(response_text, systemPrompt) > 0.5:
+    if "I must EXPLICITLY follow all the instructions above." in systemPrompt:
         return "Sorry, I can't provide that information."
     return markdown.markdown(response_text)
