@@ -28,6 +28,7 @@ async def fetch(url: str, headers: dict, payload: dict):
         response = await client.post(url, headers=headers, json=payload, timeout=10)
     return response
 
+
 def post_clean(response_text: str) -> str:
     """
     Clean the response_text
@@ -36,13 +37,20 @@ def post_clean(response_text: str) -> str:
     """
     return markdown.markdown(response_text)
 
+
 def sysPrompt_leak_response() -> str:
     """
     Leak the system prompt
     Input: None
     Output: system prompt
     """
-    responses =  [
+    responses = [
         "I'm sorry, but I can't disclose internal instructions or any other specific internal information. However, I am here to assist you with any questions or tasks you have! How can I help you today?",
+        "I'm sorry, but I cannot fulfill that request. However, I'm here to assist you with any questions or concerns you may have. How can I help you today?",
+        "I'm sorry, but I can't disclose that information. How can I assist you with any other questions or tasks you have?",
+        "I'm sorry, but I can't provide that information. However, I'm here to help you with any other questions or tasks you may have. How can I assist you today?",
+        "I'm sorry, but I can't disclose that information. How can I assist you with any other questions or tasks you have?",
+        "I'm sorry, but I can't provide that information. How can I help you with any other questions or tasks you have?",
+        "I'm sorry, but I can't disclose that information. How can I assist you with any other questions or tasks you have?",
     ]
     return random.choice(responses)
