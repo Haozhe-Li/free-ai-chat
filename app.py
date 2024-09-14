@@ -121,7 +121,7 @@ async def generate():
     task_id = gen_task_id()
     logging.info(f"[app.py] Received request with task_id: {task_id}")
     if not request.referrer.startswith(request.host_url):
-        logging.info(f"[app.py] Error: Unauthorized request with task_id: {task_id}")
+        logging.error(f"[app.py] Error: Unauthorized request with task_id: {task_id}")
         return jsonify({"response": "Error Occured in Backend, Error Code: 403"})
     input_text = request.form.get("input_text")
     model = request.form.get("model")
@@ -138,13 +138,10 @@ async def generate():
         input_text=input_text, model=model, context=context, rag=rag, task_id=task_id
     )
     if 'bazinga' in response.lower():
-        logging.info(
+        logging.error(
             f"[app.py] Potential Prompt Leak: {response} with task_id: {task_id}"
         )
         response = sysPrompt_leak_response()
-        logging.info(
-            f"[app.py] Error: Prompt leak warning with task_id: {task_id}"
-        )
     logging.info(
         f"[app.py] Finished Generation with task_id: {task_id}. Response: {response}"
     )
