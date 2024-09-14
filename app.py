@@ -6,7 +6,7 @@
 
 from flask import Flask, render_template, request, jsonify, redirect
 from core.generateResponse import *
-from core.utils import gen_task_id
+from core.utils import gen_task_id, sysPrompt_leak_response
 from functools import wraps
 import json
 import logging
@@ -137,6 +137,11 @@ async def generate():
     response = await generate_response(
         input_text=input_text, model=model, context=context, rag=rag, task_id=task_id
     )
+    if 'EXPLICITLY' in response:
+        response = sysPrompt_leak_response()
+        logging.info(
+            f"[app.py] Error: Prompt leak warning with task_id: {task_id}"
+        )
     logging.info(
         f"[app.py] Finished Generation with task_id: {task_id}. Response: {response}"
     )
