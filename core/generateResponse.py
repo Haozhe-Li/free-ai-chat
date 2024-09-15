@@ -8,7 +8,8 @@ import os
 import asyncio
 import logging
 
-from core.utils import fetch, post_clean
+from core.utils import fetch, sysPrompt_leak_response
+from core.prompt_leak_detector import PromptLeakDetector
 from core.prompts import *
 from core.rag import rag_search
 
@@ -30,9 +31,16 @@ role = {
     "translator": translatorPrompt,
 }
 
+pm_detector = PromptLeakDetector()
+
 
 async def generate_response(
-    input_text: str, model: str, role: str = "", context: list = None, rag: bool = False, task_id: str = ""
+    input_text: str,
+    model: str,
+    role: str = "",
+    context: list = None,
+    rag: bool = False,
+    task_id: str = "",
 ) -> str:
     """
     Generate response based on the input_text and model.
@@ -40,7 +48,7 @@ async def generate_response(
     Input: input_text, model
     Output: response
     """
-    
+
     # Check if rag, and get ragPrompt and reference
     try:
         ragPrompt = ""
@@ -56,7 +64,7 @@ async def generate_response(
         logging.error(
             f"[generateResponse.py] Error in RAG search with task_id: {task_id}. {e}, continue without RAG"
         )
-        ragPrompt = ""    
+        ragPrompt = ""
     # Prepare messages
     messages = [
         {
@@ -78,7 +86,9 @@ async def generate_response(
     # If model is auto, select model based on number of messages
     if model == "auto":
         model = "gpt-4o-mini" if len(messages) < 4 else "llama-3.1-8b-instant"
-        logging.info(f"[generateResponse.py] Auto model selection with task_id: {task_id}. {model}")
+        logging.info(
+            f"[generateResponse.py] Auto model selection with task_id: {task_id}. {model}"
+        )
     if "gpt" in model:
         url = openai_url
         api_key = openai_api_key
@@ -108,11 +118,19 @@ async def generate_response(
             )
             return "Error Occured in Backend, Error Code: 500"
         logging.info(f"[generateResponse.py] Response received.")
-        return (
-            response.json()["choices"][0]["message"]["content"]
-        )
+        tr = response.json()["choices"][0]["message"]["content"]
+        if model == "gpt-4o-mini":
+            return tr
+        if pm_detector.detect(tr):
+            logging.error(
+                f"[generateResponse.py] Detected prompt manipulation with task_id: {task_id}. {tr}"
+            )
+            return sysPrompt_leak_response()
+        return tr
     except Exception as e:
-        logging.error(f"[generateResponse.py] Error in request with task_id: {task_id}. {str(e)}")
+        logging.error(
+            f"[generateResponse.py] Error in request with task_id: {task_id}. {str(e)}"
+        )
         return "Error Occured in Backend, Error Code: 500"
 
 

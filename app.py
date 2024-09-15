@@ -137,14 +137,6 @@ async def generate():
     response = await generate_response(
         input_text=input_text, model=model, context=context, rag=rag, task_id=task_id
     )
-    if 'bazinga' in response.lower():
-        logging.error(
-            f"[app.py] Potential Prompt Leak: {response} with task_id: {task_id}"
-        )
-        response = sysPrompt_leak_response()
-    logging.info(
-        f"[app.py] Finished Generation with task_id: {task_id}. Response: {response}"
-    )
     return jsonify({"response": response})
 
 
