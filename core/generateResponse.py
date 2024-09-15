@@ -121,6 +121,9 @@ async def generate_response(
         tr = response.json()["choices"][0]["message"]["content"]
         if model == "gpt-4o-mini":
             return tr
+        logging.info(
+            f"[generateResponse.py] Detecting prompt manipulation, with task_id: {task_id}"
+        )
         if pm_detector.detect(tr):
             logging.error(
                 f"[generateResponse.py] Detected prompt manipulation with task_id: {task_id}. {tr}"
