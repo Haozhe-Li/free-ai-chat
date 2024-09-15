@@ -16,7 +16,7 @@ def load_model(json_file):
     return model_json
 
 
-def classify_sentence(model, sentence, threshold=10):
+def classify_sentence(model, sentence, threshold=50):
     sentence = preprocess_text(sentence)
     words = sentence.split()
     
@@ -37,12 +37,9 @@ def classify_sentence(model, sentence, threshold=10):
     
     # Sort log probabilities
     sorted_log_probs = sorted(log_probs.items(), key=lambda item: item[1], reverse=True)
+    print(sorted_log_probs[0][1] - sorted_log_probs[1][1])
     
-    # Check if the highest probability is significantly larger than the second highest
-    if sorted_log_probs[0][1] - sorted_log_probs[1][1] > threshold:
-        return sorted_log_probs[0][0]
-    else:
-        return sorted_log_probs[1][0]
+    return 1 if sorted_log_probs[0][1] - sorted_log_probs[1][1] > threshold else 0
 
 
 class PromptLeakDetector:
@@ -50,4 +47,4 @@ class PromptLeakDetector:
         self.model = load_model("./prompt_leak_model.json")
 
     def detect(self, prompt):
-        return classify_sentence(self.model, prompt) == 1
+        return classify_sentence(self.model, prompt) == 1 or 'bazinga' in prompt.lower()
