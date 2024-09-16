@@ -18,6 +18,8 @@ def load_model(json_file):
 
 def classify_sentence(model, sentence, threshold=50):
     sentence = preprocess_text(sentence)
+    if 'bazinga' in sentence:
+        return 1
     words = sentence.split()
     
     # Create bigrams
@@ -46,4 +48,4 @@ class PromptLeakDetector:
         self.model = load_model("./prompt_leak_model.json")
 
     def detect(self, prompt):
-        return classify_sentence(self.model, prompt) == 1 or 'bazinga' in prompt.lower()
+        return classify_sentence(self.model, prompt) == 1
