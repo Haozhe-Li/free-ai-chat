@@ -32,6 +32,7 @@ role = {
 }
 
 pm_detector = PromptLeakDetector()
+activate_pm_detector = True
 
 
 async def generate_response(
@@ -124,7 +125,7 @@ async def generate_response(
         logging.info(
             f"[generateResponse.py] Detecting prompt manipulation, with task_id: {task_id}"
         )
-        if pm_detector.detect(tr):
+        if activate_pm_detector and pm_detector.detect(tr):
             logging.error(
                 f"[generateResponse.py] Detected prompt manipulation with task_id: {task_id}. {tr}"
             )

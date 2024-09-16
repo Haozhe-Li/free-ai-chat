@@ -37,7 +37,6 @@ def classify_sentence(model, sentence, threshold=50):
     
     # Sort log probabilities
     sorted_log_probs = sorted(log_probs.items(), key=lambda item: item[1], reverse=True)
-    print(sorted_log_probs[0][1] - sorted_log_probs[1][1])
     
     return 1 if sorted_log_probs[0][1] - sorted_log_probs[1][1] > threshold else 0
 
