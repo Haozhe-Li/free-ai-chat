@@ -8,7 +8,7 @@ import os
 import asyncio
 import logging
 
-from core.utils import fetch, sysPrompt_leak_response
+from core.utils import fetch, sysPrompt_leak_response, get_champaign_time
 from core.prompt_leak_detector import PromptLeakDetector
 from core.prompts import *
 from core.rag import rag_search
@@ -70,7 +70,7 @@ async def generate_response(
     messages = [
         {
             "role": "system",
-            "content": systemPrompt + ragPrompt + startConversation,
+            "content": get_champaign_time(systemPrompt) + ragPrompt + startConversation,
         }
     ]
     messages = messages + context if context else messages
@@ -86,7 +86,8 @@ async def generate_response(
 
     # If model is auto, select model based on number of messages
     if model == "auto":
-        model = "gpt-4o-mini" if len(messages) < 4 else "llama-3.1-8b-instant"
+        # model = "gpt-4o-mini" if len(messages) < 4 else "llama-3.1-8b-instant"
+        model = "gpt-4o-mini"
         logging.info(
             f"[generateResponse.py] Auto model selection with task_id: {task_id}. {model}"
         )

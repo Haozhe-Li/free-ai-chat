@@ -7,6 +7,8 @@
 import httpx
 import random
 import markdown
+from datetime import datetime
+import pytz
 
 
 def gen_task_id():
@@ -54,3 +56,12 @@ def sysPrompt_leak_response() -> str:
         "I'm sorry, but I can't disclose that information. How can I assist you with any other questions or tasks you have?",
     ]
     return random.choice(responses)
+
+def get_champaign_time(sysPrompt: str) -> str:
+    """
+    Get the current time in Champaign, IL
+    Input: sysPrompt
+    Output: sysPrompt with current time
+    """
+    champaign_time = datetime.now(pytz.timezone("America/Chicago")).strftime("%Y-%m-%d %H:%M:%S")
+    return sysPrompt.replace("$CURRENT_TIME$", champaign_time)
